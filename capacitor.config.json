@@ -1,0 +1,11 @@
+{
+  "appId": "com.losmagosdeltiempo.game",
+  "appName": "ICE RUN",
+  "webDir": "html",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

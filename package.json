@@ -1,0 +1,19 @@
+{
+  "name": "los-magos-del-tiempo",
+  "private": true,
+  "scripts": {
+    "android:add": "npx cap add android",
+    "android:sync": "npx cap sync android",
+    "android:assets": "npx capacitor-assets generate",
+    "android:build": "npx cap copy android && cd android && gradlew.bat assembleDebug",
+    "android:release": "npx cap copy android && cd android && gradlew.bat assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.0",
+    "@capacitor/cli": "^7.4.0",
+    "@capacitor/core": "^7.4.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

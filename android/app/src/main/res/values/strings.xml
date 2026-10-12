@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ICE RUN</string>
+    <string name="title_activity_main">ICE RUN</string>
+    <string name="package_name">com.losmagosdeltiempo.game</string>
+    <string name="custom_url_scheme">com.losmagosdeltiempo.game</string>
+</resources>

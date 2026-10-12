@@ -1,0 +1,143 @@
+﻿/* ============================================================
+   ICE RUN - Estilos glaciales v6
+   ============================================================ */
+:root {
+  --ice-dark:#040d1a; --ice-deep:#071a2e; --ice-mid:#0a2846;
+  --ice-cyan:#00e5ff; --ice-neon:#4dffff; --ice-frost:#b2ebf2;
+  --ice-white:#e8fbff; --ice-accent:#7b61ff; --ice-danger:#ff3d71;
+  --ice-gold:#ffd54f; --ice-green:#7bff9f; --ice-legend:#ff9b3d;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  height:100%;
+  background: radial-gradient(circle at 50% 0%, #0a2846 0%, #040d1a 60%, #000 100%);
+  color: var(--ice-frost);
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+  user-select: none;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 8px;
+}
+#app {
+  position: relative;
+  width: min(96vw, 960px);
+  height: min(64vw, 640px);
+  max-width: 960px;
+  max-height: 640px;
+  aspect-ratio: 3 / 2;
+  margin: 0 auto;
+  border: 2px solid var(--ice-cyan);
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(0,229,255,0.4), inset 0 0 40px rgba(0,229,255,0.08);
+  background: linear-gradient(180deg, #071a2e 0%, #040d1a 100%);
+  overflow: hidden;
+}
+canvas#game {
+  display:block;
+  width:100%;
+  height:100%;
+  image-rendering:pixelated;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.touch-controls {
+  display: none;
+}
+@media (pointer: coarse), (max-width: 760px) {
+  .touch-controls {
+    display: flex;
+    position: absolute;
+    inset: auto 18px 18px;
+    z-index: 30;
+    align-items: flex-end;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .touch-joystick,
+  .touch-action {
+    pointer-events: auto;
+    touch-action: none;
+  }
+  .touch-joystick {
+    width: 112px;
+    height: 112px;
+    border: 2px solid rgba(0, 229, 255, 0.7);
+    border-radius: 50%;
+    background: rgba(4, 13, 26, 0.65);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
+    display: grid;
+    place-items: center;
+  }
+  .touch-joystick-knob {
+    width: 54px;
+    height: 54px;
+    border: 2px solid var(--ice-neon);
+    border-radius: 50%;
+    background: rgba(0, 229, 255, 0.35);
+    box-shadow: 0 0 14px rgba(0, 229, 255, 0.6);
+    will-change: transform;
+  }
+  .touch-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 54px);
+    gap: 8px;
+    align-items: end;
+  }
+  .touch-action {
+    width: 54px;
+    height: 54px;
+    padding: 0;
+    border: 2px solid var(--ice-cyan);
+    border-radius: 50%;
+    color: var(--ice-white);
+    background: rgba(4, 13, 26, 0.78);
+    font: 700 22px 'Courier New', monospace;
+    box-shadow: 0 0 14px rgba(0, 229, 255, 0.25);
+  }
+  .touch-action:active {
+    transform: scale(0.9);
+    background: rgba(0, 229, 255, 0.35);
+  }
+  .touch-action-interact {
+    font-size: 16px;
+    color: var(--ice-gold);
+    border-color: var(--ice-gold);
+  }
+}
+
+/* ============================================================
+   ANIMACION DE FOCO GLOBAL
+   Se aplica a cualquier elemento con .focused
+   ============================================================ */
+@keyframes focus-pulse {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(0, 229, 255, 0.7),
+      0 0 18px rgba(0, 229, 255, 0.55),
+      0 0 36px rgba(0, 229, 255, 0.25);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(0, 229, 255, 0.15),
+      0 0 28px rgba(0, 229, 255, 0.85),
+      0 0 56px rgba(0, 229, 255, 0.45);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(0, 229, 255, 0.7),
+      0 0 18px rgba(0, 229, 255, 0.55),
+      0 0 36px rgba(0, 229, 255, 0.25);
+  }
+}
+@keyframes focus-glow-gold {
+  0% { box-shadow: 0 0 0 0 rgba(255, 213, 79, 0.7), 0 0 18px rgba(255, 213, 79, 0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 213, 79, 0.1), 0 0 32px rgba(255, 213, 79, 0.9); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 213, 79, 0.7), 0 0 18px rgba(255, 213, 79, 0.5); }
+}

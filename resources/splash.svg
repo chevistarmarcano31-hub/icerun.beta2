@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <defs>
+    <radialGradient id="bg"><stop stop-color="#0a2846"/><stop offset="1" stop-color="#040d1a"/></radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <g fill="none" stroke="#00e5ff" opacity=".8">
+    <circle cx="960" cy="500" r="240" stroke-width="8"/>
+    <circle cx="960" cy="500" r="185" stroke-width="3"/>
+  </g>
+  <text x="960" y="540" text-anchor="middle" fill="#e8fbff" font-family="monospace" font-size="86" font-weight="bold" letter-spacing="14">ICE RUN</text>
+  <text x="960" y="620" text-anchor="middle" fill="#4dffff" font-family="monospace" font-size="25" letter-spacing="7">ICE RUN</text>
+</svg>

@@ -1,0 +1,19 @@
+{
+  "name": "ICE RUN",
+  "short_name": "ICE RUN",
+  "description": "Roguelike glacial de acción.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#040d1a",
+  "theme_color": "#071a2e",
+  "icons": [
+    {
+      "src": "../resources/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}

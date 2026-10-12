@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+<meta name="theme-color" content="#071a2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<title>ICE RUN ❄️</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/hud.css">
+<link rel="stylesheet" href="css/screens.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/levelup.css">
+</head>
+<body>
+<div id="app">
+
+  <canvas id="game" width="960" height="640"></canvas>
+
+  <!-- ============ HUD ============ -->
+  <div id="hud">
+
+    <div class="hud-element hud-hp-position" id="hud-hp">
+      <div class="hud-label">HP <span id="inputModeBadge" class="input-badge is-hidden"></span></div>
+      <div class="hud-bar"><div class="hud-fill" id="hpFill"></div></div>
+      <div class="hud-text" id="hpText">100 / 100</div>
+    </div>
+    <div class="hud-element hud-p2-position is-hidden" id="hud-p2">
+      <div class="hud-label">P2 · HP / ESCUDO</div>
+      <div class="hud-bar"><div class="hud-fill hud-p2-fill" id="p2HpFill"></div></div>
+      <div class="hud-text" id="p2HpText">100 / 100</div>
+    </div>
+
+    <div class="ability-slot" id="abilitySlot" data-slot="dash" title="Dash">
+      <div class="ability-icon">💨</div>
+      <div class="ability-cooldown" id="dashCooldown"></div>
+      <div class="ability-key" id="dashKey">SHIFT</div>
+    </div>
+    <div class="ability-slot" id="basicSlot" data-slot="basic" title="Ataque básico">
+      <div class="ability-icon">❄️</div>
+      <div class="ability-cooldown" id="basicCooldown"></div>
+      <div class="ability-key" id="basicKey">Z</div>
+    </div>
+    <div class="ability-slot" id="meleeSlot" data-slot="melee" title="Melee">
+      <div class="ability-icon">🗡️</div>
+      <div class="ability-cooldown" id="meleeCooldown"></div>
+      <div class="ability-key" id="meleeKey">E</div>
+    </div>
+    <div class="ability-slot" id="longSlot" data-slot="long" title="Ráfaga pesada">
+      <div class="ability-icon">☄️</div>
+      <div class="ability-cooldown" id="longCooldown"></div>
+      <div class="ability-key" id="longKey">Q</div>
+    </div>
+    <div class="ability-slot" id="blockSlot" data-slot="block" title="Bloqueo">
+      <div class="ability-icon">🛡️</div>
+      <div class="ability-cooldown" id="blockCooldown"></div>
+      <div class="ability-key" id="blockKey">F</div>
+    </div>
+
+    <div class="hud-element hud-top-center-position" id="hud-top-center">
+      <div class="top-center-row">
+        <div class="hud-label no-margin">PISO <span id="floorText">1</span></div>
+        <div id="bossInline" class="boss-inline is-hidden">
+          <span class="boss-inline-name" id="bossInlineName">JEFE</span>
+          <div class="boss-inline-bar">
+            <div class="boss-inline-fill" id="bossInlineFill"></div>
+          </div>
+          <span class="boss-inline-hp" id="bossInlineHp">0/0</span>
+        </div>
+      </div>
+      <!-- Reto del piso -->
+      <div class="challenge-badge is-hidden" id="challengeBadge">
+        <span class="challenge-icon" id="challengeIcon">⚔</span>
+        <span class="challenge-text" id="challengeText">Reto</span>
+      </div>
+    </div>
+
+    <div class="hud-element hud-rooms-position" id="hud-rooms">
+      <div class="hud-label">SALAS</div>
+      <div class="hud-value" id="roomsText">0 / 0</div>
+    </div>
+
+    <div class="hud-element hud-coins-position" id="hud-coins">
+      <div class="hud-label">MONEDAS</div>
+      <div class="hud-value gold" id="runCoinsText">◆ 0</div>
+    </div>
+
+    <div class="hud-element hud-stats-position" id="hud-stats">
+      <div class="hud-label">ATK · DEF · VEL · CRIT</div>
+      <div class="hud-value" id="statsText">10 · 0 · 3.2 · 5%</div>
+    </div>
+
+    <div class="hud-element hud-xp-position" id="hud-xp">
+      <div class="hud-label">NIVEL <span id="levelText">1</span> · XP</div>
+      <div class="xp-bar">
+        <div class="xp-fill" id="xpFill"></div>
+      </div>
+      <div class="hud-text" id="xpText">0 / 20</div>
+    </div>
+
+    <div id="consumableBar" class="consumable-bar"></div>
+
+    <canvas id="minimap" width="180" height="180" class="minimap"></canvas>
+
+    <div id="bossLockMsg" class="boss-lock-msg is-hidden">
+      🔒 CÁMARA DEL JEFE BLOQUEADA — Limpia todas las salas primero
+    </div>
+
+    <div id="touchControls" class="touch-controls" aria-label="Controles táctiles">
+      <div id="touchJoystick" class="touch-joystick" aria-label="Mover personaje">
+        <div id="touchJoystickKnob" class="touch-joystick-knob"></div>
+      </div>
+      <div class="touch-actions">
+        <button class="touch-action touch-action-dash" data-touch-action="dash" aria-label="Dash">💨</button>
+        <button class="touch-action touch-action-basic" data-touch-action="basic" aria-label="Ataque">❄️</button>
+        <button class="touch-action touch-action-melee" data-touch-action="melee" aria-label="Melee">🗡️</button>
+        <button class="touch-action touch-action-long" data-touch-action="long" aria-label="Ráfaga pesada">☄️</button>
+        <button class="touch-action touch-action-block" data-touch-action="block" aria-label="Bloquear">🛡️</button>
+        <button class="touch-action touch-action-interact" data-touch-action="interact" aria-label="Interactuar">E</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="screen-customize">
+    <h2 class="screen-title">🎨 PERSONALIZAR PERSONAJE</h2>
+    <p class="modal-hint" id="customizationHint">Selecciona un sprite de <strong>player.customize</strong>.</p>
+    <div id="coopCharacterControls" class="coop-character-controls is-hidden">
+      <button class="btn" id="btn-select-p1" type="button">P1: elegir</button>
+      <button class="btn" id="btn-select-p2" type="button">P2: elegir</button>
+      <button class="btn gold" id="btn-start-coop-selected" type="button">▶ Iniciar cooperativo</button>
+    </div>
+    <div class="customization-preview">
+      <canvas id="customizationPreview" width="128" height="128"></canvas>
+      <div id="customizationSelected" class="customization-selected"></div>
+    </div>
+    <div id="customizationGrid" class="customization-grid"></div>
+    <button class="btn" id="btn-customize-back">← Volver (B)</button>
+  </div>
+
+  <!-- ============ INVENTARIO MODAL ============ -->
+  <div class="overlay" id="screen-inventory-modal">
+    <h2 class="screen-title">🎒 INVENTARIO DE RUN</h2>
+    <div class="inv-modal-stats">
+      <div>◆ Monedas: <strong id="invModalCoins">0</strong></div>
+      <div>📦 Items: <strong id="invModalItemsCount">0</strong></div>
+      <div>⭐ Nivel: <strong id="invModalLevel">1</strong></div>
+      <div>⚔ Jefe: <strong id="invModalBoss">—</strong></div>
+    </div>
+    <div class="inv-modal-challenge" id="invModalChallenge"></div>
+    <h3 class="sub-title">Sinergias activas</h3>
+    <div id="invModalSynergies" class="synergy-list"></div>
+    <h3 class="sub-title">Items equipados</h3>
+    <div id="invModalItems" class="inv-modal-grid"></div>
+    <h3 class="sub-title">Consumibles</h3>
+    <div id="invModalConsumables" class="inv-modal-grid"></div>
+    <button class="btn" id="btn-inv-modal-close">✕ Cerrar (B)</button>
+  </div>
+
+  <div class="overlay active" id="screen-menu">
+    <h1 class="title">ICE RUN</h1>
+    <p class="subtitle">❄ Roguelike Glacial ❄</p>
+    <button class="btn" id="btn-play">▶ Jugar</button>
+    <button class="btn gold" id="btn-survival-menu">⚔ Modo Supervivencia</button>
+    <button class="btn" id="btn-options">⚙ Opciones</button>
+    <button class="btn" id="btn-stats">📊 Estadísticas</button>
+    <button class="btn gold" id="btn-achievements">🏆 Logros</button>
+  </div>
+
+  <div class="overlay" id="screen-lobby">
+    <h2 class="screen-title">LOBBY</h2>
+    <div class="lobby-stats">
+      <div>◆ <span id="lobbyCoins">0</span></div>
+      <div>✦ <span id="lobbyGems">0</span></div>
+      <div>🏆 Piso <span id="lobbyBest">0</span></div>
+    </div>
+    <button class="btn" id="btn-new-run">▶ Iniciar Run</button>
+    <button class="btn coop-btn" id="btn-coop-run">❄❄ Cooperativo local (2 jugadores)</button>
+    <button class="btn gold" id="btn-survival">⚔ Modo Supervivencia</button>
+    <button class="btn gold" id="btn-endless" disabled>∞ Endless (Bloqueado)</button>
+    <button class="btn" id="btn-shop-perm">🛒 Tienda Permanente</button>
+    <button class="btn" id="btn-inv-meta">🎒 Inventario Meta</button>
+    <button class="btn" id="btn-customize">🎨 Personalizar personaje</button>
+    <button class="btn" id="btn-achievements-lobby">🏆 Logros</button>
+    <button class="btn" id="btn-options-lobby">⚙ Opciones</button>
+    <button class="btn danger" id="btn-back-menu">← Menú</button>
+  </div>
+
+  <div class="overlay" id="screen-options">
+    <h2 class="screen-title">⚙ OPCIONES</h2>
+    <div class="options-panel">
+      <div class="option-row">
+        <label>Volumen: <span id="volVal">70</span>%</label>
+        <input type="range" id="optVolume" min="0" max="100" value="70">
+      </div>
+      <div class="option-row">
+        <label>Efectos: <span id="sfxVal">80</span>%</label>
+        <input type="range" id="optSfx" min="0" max="100" value="80">
+      </div>
+      <div class="option-row">
+        <label>Mostrar minimapa</label>
+        <div class="toggle-group">
+          <button class="toggle-btn" id="optMinimapOn" data-toggle="minimap" data-value="on">ON</button>
+          <button class="toggle-btn" id="optMinimapOff" data-toggle="minimap" data-value="off">OFF</button>
+        </div>
+      </div>
+      <div class="option-row">
+        <label>Dificultad</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" data-diff="normal">Normal</button>
+          <button class="toggle-btn" data-diff="hard">Difícil</button>
+          <button class="toggle-btn" data-diff="insane">Insano</button>
+        </div>
+      </div>
+    </div>
+    <h3 class="sub-title">Rebinding de teclas</h3>
+    <div id="keybindList" class="keybind-list"></div>
+    <div class="options-footer">
+      <button class="btn small" id="btn-reset-keys">↻ Restaurar teclas</button>
+      <button class="btn gold" id="btn-download-apk">📱 Descargar APK</button>
+      <button class="btn" id="btn-options-back">← Volver (B)</button>
+      <button class="btn danger" id="btn-reset-save">🗑 Borrar progreso</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="screen-stats">
+    <h2 class="screen-title">📊 ESTADÍSTICAS</h2>
+    <div class="stats-grid" id="statsGrid"></div>
+    <button class="btn" id="btn-stats-back">← Volver (B)</button>
+  </div>
+
+  <div class="overlay" id="screen-achievements">
+    <h2 class="screen-title">🏆 LOGROS</h2>
+    <div class="ach-summary">
+      <span>Desbloqueados: <strong id="achCount">0</strong> / <strong id="achTotal">0</strong></span>
+      <span>Progreso global: <strong id="achPercent">0%</strong></span>
+    </div>
+    <div class="ach-grid" id="achGrid"></div>
+    <button class="btn" id="btn-ach-back">← Volver (B)</button>
+  </div>
+
+  <div class="overlay" id="screen-shop-perm">
+    <h2 class="screen-title">🛒 TIENDA PERMANENTE</h2>
+    <div class="stats-grid" id="permShopGrid"></div>
+    <div class="options-footer">
+      <span class="meta-coins-label">◆ Meta: <strong id="permShopCoins">0</strong></span>
+      <button class="btn" id="btn-perm-back">← Volver (B)</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="screen-inv-meta">
+    <h2 class="screen-title">🎒 INVENTARIO META</h2>
+    <div class="stats-grid" id="invMetaGrid"></div>
+    <button class="btn" id="btn-inv-back">← Volver (B)</button>
+  </div>
+
+  <div class="overlay" id="screen-shop">
+    <h2 class="screen-title">🏪 MERCADILLO DEL PISO <span id="shopFloor">1</span></h2>
+    <p class="modal-hint">
+      Bienes perecederos y reliquias. Los consumibles se acumulan (máx. por tipo).
+    </p>
+    <div class="shop-grid" id="shopGrid"></div>
+    <div class="shop-footer">
+      <span>◆ <strong id="shopCoins">0</strong></span>
+      <button class="btn small" id="btn-shop-close">✕ Salir (B)</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="screen-chest">
+    <h2 class="screen-title">📦 COFRE</h2>
+    <p class="modal-hint">Elige un item para esta run.</p>
+    <div class="shop-grid" id="chestGrid"></div>
+  </div>
+
+  <div class="overlay" id="screen-upgrade">
+    <h2 class="screen-title">🎰 GACHA</h2>
+    <p class="modal-hint">Mejoras aleatorias para esta run.</p>
+    <div class="shop-grid" id="upgradeGrid"></div>
+  </div>
+
+  <div class="overlay" id="screen-levelup">
+    <div class="levelup-header">
+      <div class="levelup-title" id="levelupTitle">NIVEL 2</div>
+      <div class="levelup-sub" id="levelupSub">Elige una mejora</div>
+    </div>
+    <div class="levelup-grid" id="levelupGrid"></div>
+    <div class="levelup-hint">Navega con stick/D-pad · A para elegir · B para auto-elegir</div>
+  </div>
+
+  <div class="overlay" id="screen-pause">
+    <h2 class="screen-title">PAUSA</h2>
+    <button class="btn" id="btn-resume">▶ Continuar</button>
+    <button class="btn" id="btn-options-pause">⚙ Opciones</button>
+    <button class="btn danger" id="btn-abandon">✕ Abandonar Run</button>
+  </div>
+
+  <div class="overlay" id="screen-gameover">
+    <h2 class="screen-title" id="goTitle">💀 DERROTA</h2>
+    <div class="result-info" id="goInfo"></div>
+    <button class="btn" id="btn-go-lobby">🏠 Volver al Lobby</button>
+    <button class="btn gold" id="btn-go-retry">↻ Reintentar</button>
+  </div>
+
+  <div id="toasts"></div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/save.js"></script>
+<script src="js/customization.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/input.js"></script>
+<script src="js/gamepad.js"></script>
+<script src="js/player.js"></script>
+<script src="js/enemy.js"></script>
+<script src="js/boss.js"></script>
+<script src="js/room.js"></script>
+<script src="js/game.js"></script>
+<script src="js/install.js"></script>
+</body>
+</html>
