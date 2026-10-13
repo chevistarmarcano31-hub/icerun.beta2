@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#352217">
+<meta name="description" content="Muebles artesanales en madera por Enrique Marcano. El Manglillo, Península de Macanao.">
+<title>Arte en Madera · Muebles artesanales</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.jsonbin.io" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Condensed:ital,wght@0,400..700;1,400..700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="logo.png">
+
+<script>
+(function(){
+  var t = localStorage.getItem('aem_theme')
+    || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+</head>
+<body>
+
+<a href="#productos" class="skip">Saltar al contenido</a>
+
+<!-- ═══════ TOPBAR ═══════ -->
+<div class="topbar">
+  <header>
+    <div class="wrap hd">
+      <a href="#" class="logo">
+        <img src="logo.png" alt="Arte en Madera" width="56" height="56">
+        <div><b>Arte <em>en</em> Madera</b><small>Enrique Marcano</small></div>
+      </a>
+
+      <div class="hda">
+        <!-- Vistos recientemente -->
+        <button id="histBtn" class="ic" aria-label="Vistos recientemente">
+          <i class="fas fa-history"></i><span id="histCount" class="cnt">0</span>
+        </button>
+
+        <!-- Favoritos -->
+        <button id="favBtn" class="ic" aria-label="Favoritos">
+          <i class="fas fa-heart"></i><span id="favCount" class="cnt">0</span>
+        </button>
+
+        <!-- Tema -->
+        <button id="themeBtn" class="ic" aria-label="Cambiar tema"><i class="fas fa-moon"></i></button>
+
+        <!-- Carrito -->
+        <button id="cartBtn" class="ic" aria-label="Carrito">
+          <i class="fas fa-shopping-cart"></i><span id="cartCount" class="cnt">0</span>
+        </button>
+
+        <!-- Usuario (dropdown) -->
+        <div class="user-dropdown-wrap" id="userDropWrap">
+          <button id="userBtn" class="ic" aria-label="Mi cuenta" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"></i>
+          </button>
+
+          <div class="user-dropdown" id="userDrop" role="menu">
+            <div class="ud-header" id="udHeader"></div>
+
+            <div class="ud-menu">
+              <button type="button" class="ud-item" id="udProfileBtn">
+                <i class="fas fa-user-circle"></i> Mi perfil
+              </button>
+              <button type="button" class="ud-item" id="udOrdersBtn">
+                <i class="fas fa-receipt"></i> Mis pedidos
+              </button>
+
+              <div class="ud-sep"></div>
+
+              <button type="button" class="ud-item" id="udFavBtn">
+                <i class="fas fa-heart"></i> Favoritos
+                <span class="ud-badge" id="udFavCount">0</span>
+              </button>
+              <button type="button" class="ud-item" id="udHistBtn">
+                <i class="fas fa-history"></i> Vistos recientemente
+                <span class="ud-badge" id="udHistCount">0</span>
+              </button>
+
+              <div class="ud-sep"></div>
+
+              <button type="button" class="ud-item ud-danger" id="udLogoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menú móvil -->
+        <button id="menuToggle" class="ic menu-ic" aria-label="Menú"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <div id="navOverlay" class="ov"></div>
+  <nav id="nav" class="drawer" aria-hidden="true">
+    <div class="dr-head">
+      <div class="logo">
+        <img src="logo.png" alt="" width="56" height="56">
+        <div><b>Arte <em>en</em> Madera</b><small>Enrique Marcano</small></div>
+      </div>
+      <button class="x" id="closeMenu" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+    </div>
+    <ul class="dr-menu">
+      <li><a href="#inicio"><i class="fas fa-home"></i> Inicio</a></li>
+      <li class="hs">
+        <button class="st" type="button">
+          <i class="fas fa-couch"></i> Productos
+          <i class="fas fa-chevron-down ar"></i>
+        </button>
+        <ul class="sub">
+          <li><a href="#productos" data-tag="nuevo"><i class="fas fa-certificate"></i> Nuevo</a></li>
+          <li><a href="#productos" data-tag="destacado"><i class="fas fa-star"></i> Destacado</a></li>
+          <li><a href="#productos" data-tag="oferta"><i class="fas fa-tag"></i> Ofertas</a></li>
+        </ul>
+      </li>
+      <li><a href="#nosotros"><i class="fas fa-book-open"></i> Nosotros</a></li>
+
+      <li class="sp"></li>
+
+      <li><button id="favBtnM" class="st" type="button"><i class="fas fa-heart"></i> Favoritos <span class="cnt2" id="favCountM">0</span></button></li>
+      <li><button id="histBtnM" class="st" type="button"><i class="fas fa-history"></i> Vistos recientemente <span class="cnt2" id="histCountM">0</span></button></li>
+
+      <li class="sp"></li>
+      <li><button id="openLoginBtn" class="st" type="button"><i class="fas fa-user"></i> Iniciar sesión</button></li>
+      <li><button id="cartBtnM" class="st" type="button"><i class="fas fa-shopping-cart"></i> Carrito <span class="cnt2" id="cartCountM">0</span></button></li>
+      <li class="sp"></li>
+      <li class="soc">
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="wrap hg">
+    <div class="htxt">
+      <span class="bdg"><i class="fas fa-leaf"></i> Hecho a mano</span>
+      <h1>Arte en <em>madera</em> para tu hogar</h1>
+      <p>Piezas únicas elaboradas por Enrique Marcano con maderas nobles.</p>
+      <div class="ac">
+        <a href="#productos" class="btn hero-btn-primary">
+          <i class="fas fa-shopping-bag"></i>
+          <span>Ver catálogo</span>
+        </a>
+        <a href="#" id="heroRecentBtn" class="btn hero-btn-recent">
+          <i class="fas fa-history"></i>
+          <span>Vistos recientemente</span>
+        </a>
+      </div>
+    </div>
+    <img src="hero.jpg" alt="Muebles artesanales" fetchpriority="high" width="800" height="600">
+  </div>
+</section>
+
+<!-- PRODUCTOS -->
+<section class="sec wrap" id="productos">
+  <div class="hds"><span>Colección</span><h2>Productos destacados</h2></div>
+
+  <div class="tools">
+    <button id="openAddProductBtn" class="btn p admin-only" type="button" style="display:none"><i class="fas fa-plus"></i> Agregar</button>
+    <div class="srh">
+      <i class="fas fa-search"></i>
+      <input type="search" id="searchInput" placeholder="Buscar..." autocomplete="off">
+      <button id="searchClear" aria-label="Limpiar" type="button"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+
+  <div class="fl" id="filters">
+    <button class="f on" data-cat="all" type="button">Todos</button>
+    <button class="f" data-cat="mesa" type="button">Mesas</button>
+    <button class="f" data-cat="silla" type="button">Sillas</button>
+    <button class="f" data-cat="decoracion" type="button">Decoración</button>
+    <button class="f" data-cat="cocina" type="button">Cocina</button>
+    <button class="f" data-tag="nuevo" type="button">Nuevo</button>
+    <button class="f" data-tag="oferta" type="button">Oferta</button>
+    <button class="f" data-tag="destacado" type="button">Destacado</button>
+    <button class="f" data-tag="agotado" type="button">Agotados</button>
+  </div>
+  <div id="productsGrid" class="grid"></div>
+</section>
+
+<!-- VISTOS RECIENTEMENTE -->
+<section class="sec wrap" id="recientes" style="display:none">
+  <div class="hds">
+    <span>Tu historial</span>
+    <h2>Vistos recientemente</h2>
+    <button id="clearRecentBtn" class="btn c" type="button" style="margin-top:.6rem">
+      <i class="fas fa-trash"></i> Limpiar historial
+    </button>
+  </div>
+  <div id="recentGrid" class="grid"></div>
+</section>
+
+<!-- NOSOTROS -->
+<section class="sec wrap" id="nosotros">
+  <div class="hds"><span>Historia</span><h2>Pasión por la carpintería</h2></div>
+</section>
+
+<!-- MODAL PRODUCTO -->
+<div class="mo" id="productModal" aria-hidden="true"><div class="mb">
+  <div class="hdle"></div>
+  <div class="mh"><h2 id="pTitle">Nuevo producto</h2><button class="x" id="closeProductModal" type="button"><i class="fas fa-times"></i></button></div>
+  <form id="productForm" class="fm">
+    <label>Nombre *<input id="pName" required maxlength="100" placeholder="Ej: Mesa de Roble"></label>
+    <div class="rw">
+      <label>Categoría *<select id="pCat" required>
+        <option value="">Seleccionar</option>
+        <option value="mesa">Mesa</option>
+        <option value="silla">Silla</option>
+        <option value="decoracion">Decoración</option>
+        <option value="cocina">Cocina</option>
+      </select></label>
+      <label>Precio *<input id="pPrice" type="number" step="0.01" min="0" required></label>
+    </div>
+    <div class="rw">
+      <label>Precio anterior <small class="hnt"></small>
+        <input id="pOld" type="number" step="0.01" min="0">
+      </label>
+      <label>Imagen URL<input id="pUrl" type="url" placeholder="https://..."></label>
+    </div>
+    <div class="tg">
+      <label class="tc"><input type="checkbox" id="tN" value="nuevo"><span>Nuevo</span></label>
+      <label class="tc"><input type="checkbox" id="tO" value="oferta"><span>Oferta</span></label>
+      <label class="tc"><input type="checkbox" id="tD" value="destacado"><span>Destacado</span></label>
+      <label class="tc avail-tc"><input type="checkbox" id="tA" checked><span><i class="fas fa-check-circle"></i> Disponible</span></label>
+    </div>
+    <label>Imágenes <small class="hnt">máx. 5 · la primera es principal</small>
+      <label for="pImages" class="dz"><i class="fas fa-cloud-upload-alt"></i><span>Arrastra o haz clic</span></label>
+      <input type="file" id="pImages" accept="image/*" multiple hidden>
+      <div id="imagePreview" class="pv"></div>
+    </label>
+    <div class="rw">
+      <label>Material<input id="pMat" maxlength="80" placeholder="Ej: Pino"></label>
+      <label>Medidas<input id="pMed" maxlength="80" placeholder="Ej: 200x60"></label>
+    </div>
+    <label>Envío<input id="pShip" maxlength="120" placeholder="Ej: Envío gratis a todo el país"></label>
+    <label>Descripción<textarea id="pDesc" rows="3" maxlength="500"></textarea></label>
+    <div class="a2">
+      <button type="button" id="cancelProductBtn" class="btn c">Cancelar</button>
+      <button type="submit" class="btn p">Guardar</button>
+    </div>
+  </form>
+</div></div>
+
+<!-- MODAL CONFIRMAR -->
+<div class="mo" id="confirmModal" aria-hidden="true"><div class="mb sm">
+  <div class="hdle"></div>
+  <div class="mh"><h2>Confirmar</h2><button class="x" id="closeConfirmModal" type="button"><i class="fas fa-times"></i></button></div>
+  <p class="cfm" id="confirmMsg"></p>
+  <div class="a2">
+    <button id="cancelConfirmBtn" class="btn c" type="button">Cancelar</button>
+    <button id="confirmActionBtn" class="btn d" type="button">Confirmar</button>
+  </div>
+</div></div>
+
+<!-- MODAL RECORTE -->
+<div class="mo" id="cropModal" aria-hidden="true"><div class="mb">
+  <div class="hdle"></div>
+  <div class="mh"><h2>Recortar imagen</h2><button class="x" id="cancelCropBtn" type="button"><i class="fas fa-times"></i></button></div>
+  <div class="ca"><img id="cropImage" alt=""></div>
+  <div class="a2">
+    <button id="cancelCropAction" class="btn c" type="button">Cancelar</button>
+    <button id="applyCropBtn" class="btn p" type="button">Aplicar</button>
+  </div>
+</div></div>
+
+<!-- MODAL DETALLE -->
+<div class="mo detail-modal" id="detailModal" aria-hidden="true">
+  <div class="mb detail-mb">
+    <button class="x detail-x" id="closeDetailModal" type="button"><i class="fas fa-times"></i></button>
+    <div class="detail-wrap" id="detailContent"></div>
+  </div>
+</div>
+
+<!-- MODAL FAVORITOS -->
+<div class="mo" id="favModal" aria-hidden="true">
+  <div class="mb">
+    <div class="hdle"></div>
+    <div class="mh">
+      <h2><i class="fas fa-heart" style="color:#e74c3c"></i> Mis favoritos</h2>
+      <button class="x" id="closeFavModal" type="button"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="fav-body">
+      <div id="favGrid" class="grid"></div>
+      <button id="clearFavBtn" class="btn c full" type="button" style="margin-top:1rem">
+        <i class="fas fa-trash"></i> Vaciar favoritos
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LOGIN / REGISTRO -->
+<div class="mo" id="loginModal" aria-hidden="true"><div class="mb sm">
+  <div class="hdle"></div>
+  <div class="mh"><h2 id="authTitle">Iniciar sesión</h2><button class="x" id="closeLoginBtn" type="button"><i class="fas fa-times"></i></button></div>
+
+  <form id="loginForm" class="fm auth-form active" data-form="login">
+    <label>Correo o teléfono<input type="text" id="loginEmail" required autocomplete="username" placeholder="Correo o teléfono"></label>
+    <label>Contraseña<input type="password" id="loginPassword" required autocomplete="current-password" placeholder="Contraseña"></label>
+    <p class="er" id="loginError"></p>
+    <button class="btn p full" type="submit">Iniciar sesión</button>
+    <button type="button" class="link-forgot" id="forgotBtn">¿Olvidaste tu contraseña?</button>
+    <div class="auth-sep"></div>
+    <button type="button" class="link-forgot" data-goto="register">¿No tienes cuenta? Crear cuenta</button>
+  </form>
+
+  <form id="registerForm" class="fm auth-form" data-form="register">
+    <label>Nombre completo<input type="text" id="regName" required maxlength="60" autocomplete="name" placeholder="Ej: Enrique Marcano"></label>
+    <label>Correo o teléfono<input type="text" id="regEmail" required autocomplete="email" placeholder="Correo o teléfono"></label>
+    <label>Contraseña<input type="password" id="regPassword" required minlength="6" autocomplete="new-password" placeholder="Mínimo 6 caracteres"></label>
+    <label>Confirmar contraseña<input type="password" id="regPassword2" required minlength="6" autocomplete="new-password" placeholder="Repite la contraseña"></label>
+    <label class="tc-check"><input type="checkbox" id="regTerms" required><span>Acepto los <a href="#">términos y condiciones</a></span></label>
+    <p class="er" id="regError"></p>
+    <button class="btn p full" type="submit">Crear cuenta</button>
+    <div class="auth-sep"></div>
+    <button type="button" class="link-forgot" data-goto="login">¿Ya tienes cuenta? Inicia sesión</button>
+  </form>
+</div></div>
+
+<!-- MODAL RECUPERAR -->
+<div class="mo" id="recoverModal" aria-hidden="true"><div class="mb sm">
+  <div class="hdle"></div>
+  <div class="mh"><h2 id="recTitle">Recuperar contraseña</h2><button class="x" id="closeRecoverBtn" type="button"><i class="fas fa-times"></i></button></div>
+
+  <form id="recStep1" class="fm rec active">
+    <p class="rec-info"><i class="fas fa-info-circle"></i> Ingresa tu correo o teléfono y te enviaremos un código.</p>
+    <label>Correo o teléfono<input type="text" id="recEmail" required autocomplete="username" placeholder="Correo o teléfono"></label>
+    <p class="er" id="recErr1"></p>
+    <button class="btn p full" type="submit">Enviar código</button>
+  </form>
+
+  <form id="recStep2" class="fm rec">
+    <p class="rec-info"><i class="fab fa-whatsapp"></i> Se abrió WhatsApp con tu código. Pídeselo a Enrique.</p>
+    <label>Código de verificación<input type="text" id="recCode" required maxlength="6" inputmode="numeric" placeholder="000000"></label>
+    <p class="er" id="recErr2"></p>
+    <button class="btn p full" type="submit">Verificar</button>
+    <button type="button" class="link-forgot" id="recResend">Reenviar código</button>
+  </form>
+
+  <form id="recStep3" class="fm rec">
+    <p class="rec-info"><i class="fas fa-check-circle"></i> ¡Código verificado! Crea tu nueva contraseña.</p>
+    <label>Nueva contraseña<input type="password" id="recNewPass" required minlength="6" autocomplete="new-password" placeholder="Mínimo 6 caracteres"></label>
+    <label>Confirmar contraseña<input type="password" id="recNewPass2" required minlength="6" autocomplete="new-password" placeholder="Repite la contraseña"></label>
+    <p class="er" id="recErr3"></p>
+    <button class="btn p full" type="submit">Guardar contraseña</button>
+  </form>
+</div></div>
+
+<!-- MODAL PERFIL -->
+<div class="mo" id="profileModal" aria-hidden="true"><div class="mb sm">
+  <div class="hdle"></div>
+  <div class="mh">
+    <h2>Mi perfil</h2>
+    <button class="x" id="closeProfileBtn" type="button"><i class="fas fa-times"></i></button>
+  </div>
+
+  <div class="profile-body">
+    <div class="profile-head">
+      <div class="profile-avatar" id="profileAvatar">E</div>
+      <div class="profile-info">
+        <b id="profileName">Enrique Marcano</b>
+        <small id="profileEmail">correo@ejemplo.com</small>
+      </div>
+    </div>
+
+    <div class="profile-stats">
+      <div class="ps-item"><i class="fas fa-box"></i><span>Pedidos</span><b id="statOrders">0</b></div>
+      <div class="ps-item"><i class="fas fa-shopping-cart"></i><span>Carrito</span><b id="statCart">0</b></div>
+      <div class="ps-item"><i class="fas fa-calendar"></i><span>Miembro</span><b id="statSince">—</b></div>
+    </div>
+
+    <div class="profile-actions">
+      <button class="btn c full" id="viewOrdersBtn" type="button"><i class="fas fa-receipt"></i> Ver mis pedidos</button>
+      <button class="btn c full" id="editProfileBtn" type="button"><i class="fas fa-pen"></i> Editar nombre</button>
+      <button class="btn d full" id="logoutBtn" type="button"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+    </div>
+  </div>
+</div></div>
+
+<!-- MODAL EDITAR NOMBRE -->
+<div class="mo" id="editProfileModal" aria-hidden="true"><div class="mb sm">
+  <div class="hdle"></div>
+  <div class="mh"><h2>Editar nombre</h2><button class="x" id="closeEditProfileBtn" type="button"><i class="fas fa-times"></i></button></div>
+  <form id="editProfileForm" class="fm">
+    <label>Nombre completo<input type="text" id="editName" required maxlength="60" autocomplete="name"></label>
+    <div class="a2">
+      <button type="button" id="cancelEditProfileBtn" class="btn c">Cancelar</button>
+      <button type="submit" class="btn p">Guardar</button>
+    </div>
+  </form>
+</div></div>
+
+<!-- MODAL MIS PEDIDOS -->
+<div class="mo" id="ordersModal" aria-hidden="true"><div class="mb">
+  <div class="hdle"></div>
+  <div class="mh"><h2>Mis pedidos</h2><button class="x" id="closeOrdersBtn" type="button"><i class="fas fa-times"></i></button></div>
+  <div class="orders-body" id="ordersBody"></div>
+</div></div>
+
+<!-- MODAL ELEGIR WHATSAPP -->
+<div class="mo" id="waModal" aria-hidden="true">
+  <div class="mb sm wa-mb">
+    <div class="hdle"></div>
+    <div class="mh">
+      <h2><i class="fab fa-whatsapp" style="color:#25d366"></i> Enviar por WhatsApp</h2>
+      <button class="x" id="closeWaModal" type="button"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="wa-body">
+      <p class="wa-txt">Elige cómo quieres abrir el chat:</p>
+      <a class="wa-opt" id="waAppBtn" href="#">
+        <span class="wa-ic app"><i class="fab fa-whatsapp"></i></span>
+        <div><b>Abrir en la aplicación</b><small>Recomendado en móvil</small></div>
+        <i class="fas fa-chevron-right wa-arrow"></i>
+      </a>
+      <a class="wa-opt" id="waWebBtn" href="#" target="_blank" rel="noopener">
+        <span class="wa-ic web"><i class="fas fa-globe"></i></span>
+        <div><b>Abrir en WhatsApp Web</b><small>Para computadora</small></div>
+        <i class="fas fa-chevron-right wa-arrow"></i>
+      </a>
+      <button class="wa-copy" id="waCopyBtn" type="button"><i class="fas fa-copy"></i> <span id="waCopyTxt">Copiar mensaje</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RESEÑAS -->
+<div class="mo" id="reviewModal" aria-hidden="true">
+  <div class="mb">
+    <div class="hdle"></div>
+    <div class="mh">
+      <h2 id="revTitle"><i class="fas fa-star" style="color:#f5b301"></i> Reseñas</h2>
+      <button class="x" id="closeReviewModal" type="button"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="review-body">
+      <div class="rev-summary" id="revSummary"></div>
+
+      <form id="reviewForm" class="rev-form">
+        <h3>Deja tu reseña</h3>
+        <label>Tu nombre
+          <input type="text" id="revName" required maxlength="40" placeholder="Ej: María G.">
+        </label>
+        <label>Calificación
+          <div class="rev-stars-input" id="revStarsInput">
+            <button type="button" data-v="1" aria-label="1 estrella">★</button>
+            <button type="button" data-v="2" aria-label="2 estrellas">★</button>
+            <button type="button" data-v="3" aria-label="3 estrellas">★</button>
+            <button type="button" data-v="4" aria-label="4 estrellas">★</button>
+            <button type="button" data-v="5" aria-label="5 estrellas">★</button>
+          </div>
+        </label>
+        <label>Comentario
+          <textarea id="revText" required maxlength="300" rows="3" placeholder="¿Qué te pareció el producto?"></textarea>
+        </label>
+        <button type="submit" class="btn p full">
+          <i class="fas fa-paper-plane"></i> Publicar reseña
+        </button>
+      </form>
+
+      <div class="rev-list" id="revList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CARRITO -->
+<aside id="cartPanel" class="ct" aria-hidden="true">
+  <div class="ch">
+    <button class="x" id="closeCartBtn" type="button"><i class="fas fa-arrow-left"></i></button>
+    <h2>Mi carrito</h2>
+    <span></span>
+  </div>
+  <div id="cartItems" class="cb"></div>
+  <div class="cf">
+    <div class="cf-tot"><span>Total</span><strong id="cartTotal">$0</strong></div>
+    <button id="checkoutBtn" class="btn w" type="button"><i class="fab fa-whatsapp"></i> Solicitar pedido</button>
+  </div>
+</aside>
+<div id="cartBackdrop" class="bk"></div>
+
+<!-- TOAST -->
+<div id="toast" class="ts"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap ft">
+    <div class="ft-brand">
+      <div class="logo">
+        <img src="logo.png" alt="" width="70" height="70">
+        <div><b>Arte <em>en</em> Madera</b><small>Enrique Marcano</small></div>
+      </div>
+      <p>Muebles y decoración en madera natural.</p>
+      <div class="social-icons">
+        <a href="https://www.instagram.com/arte_en_madera18/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/enriquejavier.marcanomarin?locale=es_LA" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.tiktok.com/@arte.en.madera.18?lang=es-419" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      </div>
+    </div>
+    <div class="ft-contact">
+      <h4>Contacto</h4>
+      <p><i class="fas fa-user"></i> Enrique Marcano</p>
+      <p><i class="fas fa-phone"></i> <a href="tel:+584269899285">0416-4961565</a></p>
+      <p><i class="fas fa-map-marker-alt"></i> El Manglillo, Península de Macanao</p>
+    </div>
+  </div>
+  <div class="cp">© 2018 Arte en Madera</div>
+</footer>
+
+<script src="supabase-config.js" defer></script>
+<script src="index.js" defer></script>
+</body>
+</html>
